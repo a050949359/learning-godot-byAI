@@ -1,0 +1,72 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="2_player"]
+
+[sub_resource type="RectangleShape2D" id="1_coin_shape"]
+size = Vector2(28, 28)
+
+[sub_resource type="CircleShape2D" id="2_player_shape"]
+radius = 20.0
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="Background" type="Polygon2D" parent="."]
+color = Color(0.0823529, 0.129412, 0.188235, 1)
+polygon = PackedVector2Array(0, 0, 960, 0, 960, 540, 0, 540)
+
+[node name="Arena" type="Polygon2D" parent="."]
+color = Color(0.121569, 0.188235, 0.270588, 1)
+polygon = PackedVector2Array(40, 80, 920, 80, 920, 500, 40, 500)
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(480, 290)
+script = ExtResource("2_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("2_player_shape")
+
+[node name="Body" type="Polygon2D" parent="Player"]
+color = Color(0.415686, 0.823529, 1, 1)
+polygon = PackedVector2Array(0, -22, 18, 16, 0, 10, -18, 16)
+
+[node name="Coin" type="Area2D" parent="."]
+position = Vector2(720, 260)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Coin"]
+shape = SubResource("1_coin_shape")
+
+[node name="Gem" type="Polygon2D" parent="Coin"]
+color = Color(1, 0.819608, 0.219608, 1)
+polygon = PackedVector2Array(0, -18, 14, 0, 0, 18, -14, 0)
+
+[node name="GameTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 200.0
+offset_bottom = 43.0
+text = "分數：0"
+
+[node name="TimeLabel" type="Label" parent="CanvasLayer"]
+offset_left = 760.0
+offset_top = 20.0
+offset_right = 928.0
+offset_bottom = 43.0
+text = "剩餘時間：30.0"
+
+[node name="MessageLabel" type="Label" parent="CanvasLayer"]
+offset_left = 290.0
+offset_top = 18.0
+offset_right = 670.0
+offset_bottom = 70.0
+horizontal_alignment = 1
+text = "收集黃色寶石\n方向鍵或 WASD 移動"
+
+[connection signal="body_entered" from="Coin" to="." method="_on_coin_body_entered"]
+[connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
